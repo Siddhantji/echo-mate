@@ -50,6 +50,82 @@ Before running this project, make sure you have the following installed:
 - **MongoDB** (local installation or MongoDB Atlas)
 - **Git**
 
+## 🚀 Quick Start
+
+### Local Development
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/echomate.git
+cd echomate
+```
+
+2. **Set up MongoDB**
+   - Start local MongoDB: `mongod`
+   - OR use MongoDB Atlas connection string
+
+3. **Backend Setup**
+```bash
+cd backend
+npm install
+cp .env.example .env  # Create and configure .env file
+npm run dev
+```
+
+4. **Frontend Setup** (in a new terminal)
+```bash
+cd frontend
+npm install
+cp .env.example .env.local  # Create and configure .env.local
+npm run dev
+```
+
+5. **Access the application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5000/api
+
+### 🎯 One-Click EC2 Deployment
+
+**Your EC2 instance is pre-configured!**
+
+📍 **Public IP**: 65.1.111.92  
+📍 **DNS**: ec2-65-1-111-92.ap-south-1.compute.amazonaws.com
+
+**Quick Deploy**: See [EC2-DEPLOY.md](./EC2-DEPLOY.md) for instant deployment!
+
+Deploy to AWS EC2 Ubuntu with PM2 and Nginx in minutes!
+
+**See detailed guide**: [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+**Quick Steps:**
+
+1. SSH into your EC2 Ubuntu instance
+2. Clone this repository
+3. Edit `deploy.sh` and set your domain/IP
+4. Run the deployment script:
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+The script automatically:
+- ✅ Installs Node.js, MongoDB, PM2, Nginx
+- ✅ Configures environment files
+- ✅ Builds and starts applications
+- ✅ Sets up reverse proxy and firewall
+- ✅ Creates default user data
+
+**Total time**: ~10-15 minutes ⚡
+
+**Deployment Scripts:**
+- `deploy.sh` - One-click full deployment
+- `setup-ssl.sh` - SSL certificate setup with Let's Encrypt
+- `update.sh` - Quick update and restart after code changes
+- `backup.sh` - Automated MongoDB backup
+- `health-check.sh` - System health monitoring
+
+
+
 ## 🚀 Getting Started
 
 ### 1. Clone the Repository
@@ -233,12 +309,12 @@ This project is licensed under the ISC License.
 
 1. **MongoDB Connection Error**
    - Ensure MongoDB is running
-   - Check the connection string in \`.env\`
+   - Check the connection string in `.env`
    - For MongoDB Atlas, whitelist your IP address
 
 2. **Port Already in Use**
    - Change the port in the environment variables
-   - Kill the process using the port: \`lsof -ti:5000 | xargs kill\`
+   - Kill the process using the port: `lsof -ti:5000 | xargs kill`
 
 3. **CORS Errors**
    - Ensure the frontend URL is correctly set in backend CORS configuration
@@ -248,6 +324,43 @@ This project is licensed under the ISC License.
    - Clear browser local storage
    - Check JWT secret consistency
    - Verify token expiration
+
+5. **PM2 Process Not Starting**
+   - Check logs: `pm2 logs`
+   - Verify environment files exist
+   - Ensure MongoDB is running
+
+For detailed troubleshooting, see [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+---
+
+## 📚 Additional Documentation
+
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete EC2 deployment guide with SSL, monitoring, and troubleshooting
+- **[SCRIPTS.md](./SCRIPTS.md)** - Detailed documentation of all deployment scripts
+- **[QUICK-REFERENCE.md](./QUICK-REFERENCE.md)** - Command reference card for quick access
+- **[FILE-INDEX.md](./FILE-INDEX.md)** - Complete project file structure and index
+
+---
+
+## 🎯 Deployment Scripts
+
+All scripts are in the root directory and ready to use:
+
+| Script | Purpose | Time |
+|--------|---------|------|
+| `verify-system.sh` | Pre-deployment checks | ~5s |
+| `deploy.sh` | Full deployment | ~10-15min |
+| `setup-ssl.sh` | SSL certificate setup | ~2-3min |
+| `update.sh` | Quick update & restart | ~3-5min |
+| `backup.sh` | Database backup | ~1-2min |
+| `health-check.sh` | System health check | ~5s |
+
+**Make executable**: `chmod +x *.sh`
+
+See [SCRIPTS.md](./SCRIPTS.md) for detailed documentation.
+
+---
 
 ## 📞 Support
 

@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 
 # Configuration Variables
 APP_NAME="echomate"
-DOMAIN="your-domain.com"  # Change this to your domain or EC2 public IP
+DOMAIN="ec2-65-1-111-92.ap-south-1.compute.amazonaws.com"  # Your EC2 public DNS
 BACKEND_PORT=5000
 FRONTEND_PORT=3000
 MONGO_DB_NAME="echomate"
