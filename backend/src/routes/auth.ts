@@ -8,11 +8,28 @@ const router = express.Router();
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, fullName } = req.body;
+    // Basic request validation so we return clear 400 messages for bad requests
+    const { username, email, password, fullName } = req.body || {};
+
+    const missing: string[] = [];
+    if (!username) missing.push('username');
+    if (!email) missing.push('email');
+    if (!password) missing.push('password');
+    if (!fullName) missing.push('fullName');
+
+    if (missing.length > 0) {
+      return res.status(400).json({ message: `Missing required field(s): ${missing.join(', ')}` });
+    }
+
+    // Normalize inputs a little
+    const normalizedEmail = (email as string).toLowerCase().trim();
+
+    // Log attempt for easier debugging (don't log passwords in production)
+    console.log('Register attempt:', { username, email: normalizedEmail, fullName });
 
     // Check if user already exists
     const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
+      $or: [{ email: normalizedEmail }, { username }] 
     });
     
     if (existingUser) {
@@ -24,7 +41,7 @@ router.post('/register', async (req, res) => {
     // Create new user
     const user = new User({
       username,
-      email,
+      email: normalizedEmail,
       password,
       fullName
     });
@@ -58,18 +75,28 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Missing email or password' });
+    }
+
+    const normalizedEmail = (email as string).toLowerCase().trim();
+
+    // Log login attempt (do not log password in production)
+    console.log('Login attempt:', { email: normalizedEmail });
 
     // Find user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      // Use 401 Unauthorized for invalid credentials
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Check password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Generate JWT token
